@@ -16,4 +16,4 @@ set(SOURCES
     src/VarState.cpp
     src/utils/Error.cpp
 )
-add_executable(code )
+add_executable(code ${SOURCES})
