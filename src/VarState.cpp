@@ -4,17 +4,30 @@
 
 #include "utils/Error.hpp"
 
+VarState::VarState() { scopes_.emplace_back(); }
+
 void VarState::setValue(const std::string& name, int value) {
-  values_[name] = value;
+  scopes_.back()[name] = value;
 }
 
 int VarState::getValue(const std::string& name) const {
-  auto it = values_.find(name);
-  if (it == values_.end()) {
-    throw BasicError("VARIABLE NOT DEFINED");
+  for (auto it = scopes_.rbegin(); it != scopes_.rend(); ++it) {
+    auto f = it->find(name);
+    if (f != it->end()) return f->second;
   }
-  return it->second;
+  throw BasicError("VARIABLE NOT DEFINED");
 }
 
-void VarState::clear() { values_.clear(); }
+void VarState::clear() {
+  scopes_.clear();
+  scopes_.emplace_back();
+}
 
+void VarState::pushScope() { scopes_.emplace_back(); }
+
+void VarState::popScope() {
+  if (scopes_.size() <= 1) {
+    throw BasicError("SCOPE UNDERFLOW");
+  }
+  scopes_.pop_back();
+}

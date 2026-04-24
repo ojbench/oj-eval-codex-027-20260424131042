@@ -158,3 +158,12 @@ void EndStatement::execute(VarState&, Program& program) const {
   program.programEnd();
 }
 
+IndentStatement::IndentStatement(std::string src) : Statement(std::move(src)) {}
+
+void IndentStatement::execute(VarState& state, Program&) const {
+  state.pushScope();
+}
+
+DedentStatement::DedentStatement(std::string src) : Statement(std::move(src)) {}
+
+void DedentStatement::execute(VarState& state, Program&) const { state.popScope(); }

@@ -86,6 +86,10 @@ Statement* Parser::parseStatement(TokenStream& tokens, const std::string& origin
       return parseRem(tokens, originLine);
     case TokenType::END:
       return parseEnd(tokens, originLine);
+    case TokenType::INDENT:
+      return parseIndent(tokens, originLine);
+    case TokenType::DEDENT:
+      return parseDedent(tokens, originLine);
     default:
       throw BasicError("SYNTAX ERROR");
   }
@@ -183,6 +187,16 @@ Statement* Parser::parseRem(TokenStream& tokens, const std::string& originLine) 
 Statement* Parser::parseEnd(TokenStream& tokens, const std::string& originLine) const {
   (void)tokens;
   return new EndStatement(originLine);
+}
+
+Statement* Parser::parseIndent(TokenStream& tokens, const std::string& originLine) const {
+  (void)tokens;
+  return new IndentStatement(originLine);
+}
+
+Statement* Parser::parseDedent(TokenStream& tokens, const std::string& originLine) const {
+  (void)tokens;
+  return new DedentStatement(originLine);
 }
 
 Expression* Parser::parseExpression(TokenStream& tokens) const { return parseExpression(tokens, 0); }
